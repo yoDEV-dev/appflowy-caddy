@@ -1,7 +1,3 @@
 [deploy]
 healthcheckPath = "/stub_status"
 healthcheckTimeout = 30
-
-[[services]]
-name = "appflowy_caddy"
-internalPort = 80
