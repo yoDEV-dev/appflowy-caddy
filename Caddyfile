@@ -102,6 +102,15 @@
 		}
 	}
 
+	handle /app/* {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT} {
+			header_up Host {http.request.host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
+			header_up X-Forwarded-Proto {http.request.scheme}
+		}
+	}
+
 	# Static assets for web app
 	handle /static/* {
 		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT} {
@@ -127,8 +136,14 @@
 		redir /web permanent
 	}
 
-	# Admin Frontend
+	# Admin Frontend / Console
 	handle /admin/* {
+		reverse_proxy {$ENV_ADMIN_FRONTEND}:{$ENV_ADMIN_FRONTEND_PORT} {
+			header_up Host {host}
+		}
+	}
+
+	handle /console/* {
 		reverse_proxy {$ENV_ADMIN_FRONTEND}:{$ENV_ADMIN_FRONTEND_PORT} {
 			header_up Host {host}
 		}
