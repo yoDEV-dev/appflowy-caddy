@@ -102,6 +102,26 @@
 		}
 	}
 
+	# Static assets for web app
+	handle /static/* {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT} {
+			header_up Host {http.request.host}
+		}
+	}
+
+	# Other web app assets
+	handle /appflowy.ico {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT}
+	}
+
+	handle /og-image.png {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT}
+	}
+
+	handle /assets/* {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT}
+	}
+
 	# Root redirect to web app
 	handle / {
 		redir /web permanent
