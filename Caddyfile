@@ -113,13 +113,10 @@
 		}
 	}
 
-	# AI API
+	# AI API - proxy to public URL since internal networking doesn't work
 	handle /ai/* {
-		reverse_proxy {$ENV_APPFLOWY_AI}:{$ENV_APPFLOWY_AI_PORT} {
-			header_up Host {http.request.host}
-			header_up X-Real-IP {remote_host}
-			header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
-			header_up X-Forwarded-Proto {http.request.scheme}
+		reverse_proxy https://appflowyai-production.up.railway.app {
+			header_up Host appflowyai-production.up.railway.app
 		}
 	}
 
