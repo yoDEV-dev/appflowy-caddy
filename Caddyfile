@@ -92,9 +92,31 @@
 		}
 	}
 
-	# Admin Frontend (default fallback)
-	handle {
+	# AppFlowy Web App
+	handle /web/* {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT} {
+			header_up Host {http.request.host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
+			header_up X-Forwarded-Proto {http.request.scheme}
+		}
+	}
+
+	# Root redirect to web app
+	handle / {
+		redir /web permanent
+	}
+
+	# Admin Frontend
+	handle /admin/* {
 		reverse_proxy {$ENV_ADMIN_FRONTEND}:{$ENV_ADMIN_FRONTEND_PORT} {
+			header_up Host {host}
+		}
+	}
+
+	# Default fallback to web app
+	handle {
+		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT} {
 			header_up Host {host}
 		}
 	}
