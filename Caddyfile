@@ -136,14 +136,9 @@
 		redir /web permanent
 	}
 
-	# Admin Frontend / Console
-	handle /admin/* {
-		reverse_proxy {$ENV_ADMIN_FRONTEND}:{$ENV_ADMIN_FRONTEND_PORT} {
-			header_up Host {host}
-		}
-	}
-
-	handle /console/* {
+	# Admin Frontend / Console (must match /console and /console/*)
+	@console path /console /console/*
+	handle @console {
 		reverse_proxy {$ENV_ADMIN_FRONTEND}:{$ENV_ADMIN_FRONTEND_PORT} {
 			header_up Host {host}
 		}
