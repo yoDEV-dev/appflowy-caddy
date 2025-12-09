@@ -35,12 +35,29 @@
 		}
 	}
 
-	# WebSocket
+	# WebSocket - must match /ws and /ws/*
+	@websocket {
+		path /ws /ws/*
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	handle @websocket {
+		reverse_proxy {$ENV_APPFLOWY_CLOUD}:{$ENV_APPFLOWY_CLOUD_PORT} {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
+			header_up X-Forwarded-Proto {scheme}
+			flush_interval -1
+			transport http {
+				read_timeout 86400s
+			}
+		}
+	}
+
+	# WebSocket fallback for non-upgrade requests
 	handle /ws/* {
 		reverse_proxy {$ENV_APPFLOWY_CLOUD}:{$ENV_APPFLOWY_CLOUD_PORT} {
 			header_up Host {host}
-			header_up Upgrade {http.request.header.Upgrade}
-			header_up Connection {http.request.header.Connection}
 		}
 	}
 
