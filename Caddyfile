@@ -10,6 +10,13 @@
 	}
 }
 
+# AI proxy server - forwards to AI service via public URL
+:5001 {
+	reverse_proxy https://appflowyai-production.up.railway.app {
+		header_up Host appflowyai-production.up.railway.app
+	}
+}
+
 :{$PORT} {
 	log {
 		output stdout
