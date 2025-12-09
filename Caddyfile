@@ -10,7 +10,7 @@
 	}
 }
 
-:8080 {
+:{$PORT} {
 	log {
 		output file /var/log/caddy/access.log
 		format console
