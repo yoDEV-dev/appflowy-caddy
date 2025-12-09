@@ -10,7 +10,7 @@
 	}
 }
 
-:80, :443 {
+:8080 {
 	log {
 		output file /var/log/caddy/access.log
 		format console
