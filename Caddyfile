@@ -35,9 +35,9 @@
 		}
 	}
 
-	# WebSocket - must match /ws and /ws/*
+	# WebSocket - handle all /ws paths
 	@websocket {
-		path /ws /ws/*
+		path /ws /ws/* /ws/v1/*
 		header Connection *Upgrade*
 		header Upgrade websocket
 	}
@@ -56,6 +56,12 @@
 
 	# WebSocket fallback for non-upgrade requests
 	handle /ws/* {
+		reverse_proxy {$ENV_APPFLOWY_CLOUD}:{$ENV_APPFLOWY_CLOUD_PORT} {
+			header_up Host {host}
+		}
+	}
+
+	handle /ws/v1/* {
 		reverse_proxy {$ENV_APPFLOWY_CLOUD}:{$ENV_APPFLOWY_CLOUD_PORT} {
 			header_up Host {host}
 		}
