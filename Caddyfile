@@ -23,6 +23,9 @@
 		format console
 	}
 
+	# Root redirect to web app (must be before handles)
+	redir / /web permanent
+
 	# Health check
 	handle /stub_status {
 		respond "OK" 200
@@ -157,11 +160,6 @@
 
 	handle /assets/* {
 		reverse_proxy {$ENV_APPFLOWY_WEB}:{$ENV_APPFLOWY_WEB_PORT}
-	}
-
-	# Root redirect to web app
-	handle / {
-		redir /web permanent
 	}
 
 	# Admin Frontend / Console (must match /console and /console/*)
